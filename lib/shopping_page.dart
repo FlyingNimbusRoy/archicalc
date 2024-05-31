@@ -42,11 +42,7 @@ class _ShoppingPageState extends State<ShoppingPage> {
 
     if (fileName != null) {
       // Open file picker to select a location to save the file
-      String? result = await FilePicker.platform.saveFile(
-        allowedExtensions: ['csv'], // Specify allowed file extension
-        dialogTitle: 'Save CSV File as $fileName.csv',
-        fileName: fileName,
-      );
+       String?result = await FilePicker.platform.getDirectoryPath();
 
       if (result != null) {
         // Get the file path
@@ -69,7 +65,7 @@ class _ShoppingPageState extends State<ShoppingPage> {
 
         try {
           // Write content to file
-          File file = File(filePath);
+          File file = File('$filePath/$fileName.csv');
           await file.writeAsString(csvContent.toString());
 
           // Show a message using SnackBar
@@ -445,15 +441,15 @@ class _ShoppingPageState extends State<ShoppingPage> {
                           subtitle: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                             if (priceData['asset_image'].isNotEmpty)
-                               Padding(
-                                 padding: const EdgeInsets.only(bottom: 10.0),
-                                 child: Image.asset(
-                                   priceData['asset_image'],
-                                   height: 80,
-                                   width: 80,
-                                 ),
-                               ),
+                              if (priceData['asset_image'].isNotEmpty)
+                                Padding(
+                                  padding: const EdgeInsets.only(bottom: 10.0),
+                                  child: Image.asset(
+                                    priceData['asset_image'],
+                                    height: 80,
+                                    width: 80,
+                                  ),
+                                ),
                               Text(
                                 'Prijs: € ${priceData['prijs'].toString()}',
                                 style: const TextStyle(fontSize: 18.0),
