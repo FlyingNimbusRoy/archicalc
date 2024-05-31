@@ -43,7 +43,6 @@ class _CartModalState extends State<CartModal> {
               itemCount: widget.selectedItems.length,
               itemBuilder: (BuildContext context, int index) {
                 String itemName = widget.selectedItems.keys.elementAt(index);
-                print(itemName);
                 
                 int quantity = widget.selectedItems[itemName]!;
                 double totalPrice = widget.getPriceForItem(itemName) * quantity;

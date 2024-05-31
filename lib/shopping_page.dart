@@ -1,12 +1,12 @@
+import 'dart:convert';
 import 'dart:io';
 
-import 'package:flutter/material.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'dart:convert';
+import 'package:csv/csv.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import 'cart_modal.dart';
-import 'package:path_provider/path_provider.dart';
 
 class ShoppingPage extends StatefulWidget {
   final String jsonData;
@@ -52,21 +52,27 @@ class _ShoppingPageState extends State<ShoppingPage> {
         StringBuffer csvContent = StringBuffer();
 
         // Write header
-        csvContent.writeln('Order Name,Product,Quantity,Price');
+        List<List<dynamic>> rows = [];
 
-        // Write order details
+        // Add CSV header
+        rows.add(['Order Name', 'Product', 'Quantity', 'Price']);
+
+        // Iterate through orders
         orders.forEach((order) {
           String orderName = order['name'] ?? 'Unknown';
-          String product = order['product'] ?? 'Unknown Product';
-          int quantity = order['quantity'] ?? 0;
-          double price = order['price'] ?? 0.0;
-          csvContent.writeln('$orderName,$product,$quantity,$price');
+          order.forEach((product, quantity) {
+            if (product != 'name') {
+              rows.add([orderName, product, quantity, 0.0]);
+            }
+          });
         });
+
+        String csv = const ListToCsvConverter().convert(rows);
 
         try {
           // Write content to file
           File file = File('$filePath/$fileName.csv');
-          await file.writeAsString(csvContent.toString());
+          await file.writeAsString(csv);
 
           // Show a message using SnackBar
           ScaffoldMessenger.of(context).showSnackBar(
@@ -215,7 +221,6 @@ class _ShoppingPageState extends State<ShoppingPage> {
       selectedItems.clear();
     });
     _savePlacedOrdersToStorage();
-    print(placedOrders);
     Navigator.pop(context);
   }
 
