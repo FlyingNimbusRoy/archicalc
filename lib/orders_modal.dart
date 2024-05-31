@@ -19,6 +19,7 @@ class OrdersModal extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    
     return SingleChildScrollView(
       child: Container(
         padding: const EdgeInsets.all(16.0),
@@ -39,7 +40,6 @@ class OrdersModal extends StatelessWidget {
               itemCount: placedOrders.length,
               itemBuilder: (BuildContext context, int index) {
                 Map<String, dynamic> order = placedOrders[index];
-
                 // Exclude the 'name' field when populating the products
                 List<MapEntry<String, int>> typedOrder = order.entries
                     .where((entry) => entry.key != 'name')
@@ -75,10 +75,10 @@ class OrdersModal extends StatelessWidget {
                     ...typedOrder.map((entry) => ListTile(
                       title: Text('${entry.key} x ${entry.value}'),
                       subtitle:
-                      Text('Price: ${entry.value * getPriceForItem(entry.key)}'),
+                      Text('Prijs: ${entry.value * getPriceForItem(entry.key)}'),
                     )),
                     ListTile(
-                      title: Text('Total Price: ${totalPrice.toStringAsFixed(2)}'),
+                      title: Text('Totaal Prijs: ${totalPrice.toStringAsFixed(2)}'),
                     ),
                   ],
                 );
@@ -95,7 +95,7 @@ class OrdersModal extends StatelessWidget {
               onPressed: () {
                 exportOrdersToCSV(placedOrders, getPriceForItem);
               },
-              child: const Text('Export Orders to CSV'),
+              child: const Text('Exporteer bestellingen'),
             ),
           ],
         ),

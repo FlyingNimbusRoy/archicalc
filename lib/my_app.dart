@@ -18,11 +18,11 @@ class MyApp extends StatelessWidget {
       "Lipton ice tea Green", {"id": 12, "prijs": 3.00, "asset_image": "assets/images/lipton-green.png"},
       "Sourcy Blauw", {"id": 13, "prijs": 3.00, "asset_image": "assets/images/sourcy-blauw.png"},
       "Sourcy Rood", {"id": 14, "prijs": 3.00, "asset_image": "assets/images/sourcy-rood.png"},
-      "Appelsientje Sinaasappelsap", {"id": 15, "prijs": 3.00, "asset_image": ""},
-      "Lay's chips Naturel 40gr", {"id": 16, "prijs": 1.50, "asset_image": ""},
-      "Doritos chips Nacho cheese 44gr", {"id": 17, "prijs": 1.50, "asset_image": ""},
-      "Vers afgebakken koek", {"id": 18, "prijs": 3.00, "asset_image": ""},
-      "Muffin", {"id": 19, "prijs": 3.50, "asset_image": ""}
+      "Appelsientje Sinaasappelsap", {"id": 15, "prijs": 3.00, "asset_image": "assets/images/appelsientje.png"},
+      "Lay's chips Naturel 40gr", {"id": 16, "prijs": 1.50, "asset_image": "assets/images/chips-lays.png"},
+      "Doritos chips Nacho cheese 44gr", {"id": 17, "prijs": 1.50, "asset_image": "assets/images/chips-rito.png"},
+      "Vers afgebakken koek", {"id": 18, "prijs": 3.00, "asset_image": "assets/images/cookie.png"},
+      "Muffin", {"id": 19, "prijs": 3.50, "asset_image": "assets/images/muffin.png"}
     ]
   ''';
 
