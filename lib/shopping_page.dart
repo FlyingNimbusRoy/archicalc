@@ -1,3 +1,5 @@
+// ignore_for_file: library_private_types_in_public_api, use_build_context_synchronously
+
 import 'dart:convert';
 import 'dart:io';
 
@@ -11,7 +13,7 @@ import 'cart_modal.dart';
 class ShoppingPage extends StatefulWidget {
   final String jsonData;
 
-  const ShoppingPage({Key? key, required this.jsonData}) : super(key: key);
+  const ShoppingPage({super.key, required this.jsonData});
 
   @override
   _ShoppingPageState createState() => _ShoppingPageState();
@@ -36,7 +38,8 @@ class _ShoppingPageState extends State<ShoppingPage> {
     });
   }
 
-  Future<void> _exportOrdersToCSV(List<Map<String, dynamic>> orders, BuildContext context) async {
+  Future<void> _exportOrdersToCSV(
+      List<Map<String, dynamic>> orders, BuildContext context) async {
     // Prompt the user to input the file name
     final fileName = await _getFileNameFromUser(context);
 
@@ -83,13 +86,13 @@ class _ShoppingPageState extends State<ShoppingPage> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text('Orders exported to $filePath/$fileName.csv'),
-              duration: const Duration(seconds: 3), // Adjust the duration as needed
+              duration:
+                  const Duration(seconds: 3), // Adjust the duration as needed
             ),
           );
         } catch (e) {
-          print('Error writing file: $e');
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
+            const SnackBar(
               content: Text('Error exporting orders. Please try again.'),
               duration: Duration(seconds: 3), // Adjust the duration as needed
             ),
@@ -98,7 +101,7 @@ class _ShoppingPageState extends State<ShoppingPage> {
       } else {
         // User canceled the file picker or an error occurred
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
+          const SnackBar(
             content: Text('Export canceled or an error occurred.'),
             duration: Duration(seconds: 3), // Adjust the duration as needed
           ),
@@ -107,7 +110,6 @@ class _ShoppingPageState extends State<ShoppingPage> {
     }
   }
 
-
   Future<String?> _getFileNameFromUser(BuildContext context) {
     TextEditingController fileNameController = TextEditingController();
 
@@ -115,23 +117,23 @@ class _ShoppingPageState extends State<ShoppingPage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Enter File Name'),
+          title: const Text('Enter File Name'),
           content: TextField(
             controller: fileNameController,
-            decoration: InputDecoration(hintText: 'Enter file name'),
+            decoration: const InputDecoration(hintText: 'Enter file name'),
           ),
           actions: <Widget>[
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop(fileNameController.text);
               },
-              child: Text('OK'),
+              child: const Text('OK'),
             ),
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('Cancel'),
+              child: const Text('Cancel'),
             ),
           ],
         );
@@ -191,14 +193,14 @@ class _ShoppingPageState extends State<ShoppingPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     IconButton(
-                      icon: Icon(Icons.close),
+                      icon: const Icon(Icons.close),
                       onPressed: () {
                         Navigator.of(context).pop();
                       },
                     ),
                   ],
                 ),
-                SizedBox(height: 16.0),
+                const SizedBox(height: 16.0),
                 Expanded(
                   child: StatefulBuilder(
                     builder: (BuildContext context, StateSetter setState) {
@@ -212,7 +214,7 @@ class _ShoppingPageState extends State<ShoppingPage> {
                     },
                   ),
                 ),
-                SizedBox(height: 16.0),
+                const SizedBox(height: 16.0),
               ],
             ),
           ),
@@ -220,7 +222,6 @@ class _ShoppingPageState extends State<ShoppingPage> {
       },
     );
   }
-
 
   void _resetCartAndComponents() {
     setState(() {
@@ -240,8 +241,8 @@ class _ShoppingPageState extends State<ShoppingPage> {
           newName = placedOrders[index]['name'] ?? '';
         }
 
-        TextEditingController textEditingController = TextEditingController(
-            text: newName);
+        TextEditingController textEditingController =
+            TextEditingController(text: newName);
 
         return AlertDialog(
           title: const Text('Aanpasing naam bestelling'),
@@ -252,7 +253,7 @@ class _ShoppingPageState extends State<ShoppingPage> {
                 newName = value;
               });
             },
-            decoration: InputDecoration(hintText: 'Voer nieuwe naam in'),
+            decoration: const InputDecoration(hintText: 'Voer nieuwe naam in'),
           ),
           actions: <Widget>[
             ElevatedButton(
@@ -280,8 +281,6 @@ class _ShoppingPageState extends State<ShoppingPage> {
   }
 
   void _showPlacedOrders() {
-    print(placedOrders);
-
     showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
@@ -309,13 +308,18 @@ class _ShoppingPageState extends State<ShoppingPage> {
                         Map<String, dynamic> order = placedOrders[index];
 
                         // Exclude the 'name' field when populating the products
-                        List<MapEntry<String, int>> typedOrder = order.entries.where((entry) => entry.key != 'name').map((entry) {
+                        List<MapEntry<String, int>> typedOrder = order.entries
+                            .where((entry) => entry.key != 'name')
+                            .map((entry) {
                           // Ensure that the value can be converted to an integer before casting
-                          int value = entry.value is int ? entry.value : int.tryParse(entry.value.toString()) ?? 0;
+                          int value = entry.value is int
+                              ? entry.value
+                              : int.tryParse(entry.value.toString()) ?? 0;
                           return MapEntry(entry.key, value);
                         }).toList();
 
-                        double totalPrice = calculateTotalPriceForOrder(typedOrder);
+                        double totalPrice =
+                            calculateTotalPriceForOrder(typedOrder);
 
                         return ExpansionTile(
                           title: Row(
@@ -326,7 +330,8 @@ class _ShoppingPageState extends State<ShoppingPage> {
                                   _editOrderName(index);
                                 },
                               ),
-                              Text(order['name'] ?? ''), // Display the order name
+                              Text(order['name'] ??
+                                  ''), // Display the order name
                               const Spacer(), // Add this spacer
                               IconButton(
                                 icon: const Icon(Icons.delete),
@@ -341,9 +346,10 @@ class _ShoppingPageState extends State<ShoppingPage> {
                           ),
                           children: [
                             ...typedOrder.map((entry) => ListTile(
-                              title: Text('${entry.key} x ${entry.value}'),
-                              subtitle: Text('Prijs: €${entry.value * getPriceForItem(entry.key)}'),
-                            )),
+                                  title: Text('${entry.key} x ${entry.value}'),
+                                  subtitle: Text(
+                                      'Prijs: €${entry.value * getPriceForItem(entry.key)}'),
+                                )),
                             ListTile(
                               title: Text('Totaal Prijs: €$totalPrice'),
                             ),
@@ -362,7 +368,7 @@ class _ShoppingPageState extends State<ShoppingPage> {
                       onPressed: () {
                         _exportOrdersToCSV(placedOrders, context);
                       },
-                      child: Text('Export Orders to CSV'),
+                      child: const Text('Export Orders to CSV'),
                     ),
                   ],
                 ),
@@ -387,10 +393,7 @@ class _ShoppingPageState extends State<ShoppingPage> {
 
   Future<void> _savePlacedOrdersToStorage() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    List<String> encodedOrders = placedOrders
-        .asMap()
-        .entries
-        .map((entry) {
+    List<String> encodedOrders = placedOrders.asMap().entries.map((entry) {
       int index = entry.key;
       Map<String, dynamic> order = entry.value;
       if (order.containsKey('name')) {
@@ -505,7 +508,8 @@ class _ShoppingPageState extends State<ShoppingPage> {
             children: [
               Text(
                 'Prijs: €${calculateTotalPrice().toStringAsFixed(2)}',
-                style: const TextStyle(fontSize: 22.0,
+                style: const TextStyle(
+                    fontSize: 22.0,
                     fontWeight: FontWeight.bold,
                     color: Colors.white),
               ),
@@ -513,9 +517,9 @@ class _ShoppingPageState extends State<ShoppingPage> {
                 onPressed: _showPlacedOrders,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.white,
-                  fixedSize: Size.fromHeight(55),
+                  fixedSize: const Size.fromHeight(55),
                 ),
-                child: Text(
+                child: const Text(
                   'Bestellingen',
                   style: TextStyle(color: Color(0xFFFFA000), fontSize: 16.0),
                 ),

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'dart:convert';
 
 class OrdersModal extends StatelessWidget {
   final List<Map<String, dynamic>> placedOrders;
@@ -9,17 +8,16 @@ class OrdersModal extends StatelessWidget {
   final Function(List<Map<String, dynamic>>, Function) exportOrdersToCSV;
 
   const OrdersModal({
-    Key? key,
+    super.key,
     required this.placedOrders,
     required this.editOrderName,
     required this.removeOrder,
     required this.savePlacedOrdersToStorage,
     required this.exportOrdersToCSV,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
-    
     return SingleChildScrollView(
       child: Container(
         padding: const EdgeInsets.all(16.0),
@@ -45,8 +43,9 @@ class OrdersModal extends StatelessWidget {
                     .where((entry) => entry.key != 'name')
                     .map((entry) {
                   // Ensure that the value can be converted to an integer before casting
-                  int value =
-                  entry.value is int ? entry.value : int.tryParse(entry.value.toString()) ?? 0;
+                  int value = entry.value is int
+                      ? entry.value
+                      : int.tryParse(entry.value.toString()) ?? 0;
                   return MapEntry(entry.key, value);
                 }).toList();
 
@@ -73,12 +72,13 @@ class OrdersModal extends StatelessWidget {
                   ),
                   children: [
                     ...typedOrder.map((entry) => ListTile(
-                      title: Text('${entry.key} x ${entry.value}'),
-                      subtitle:
-                      Text('Prijs: ${entry.value * getPriceForItem(entry.key)}'),
-                    )),
+                          title: Text('${entry.key} x ${entry.value}'),
+                          subtitle: Text(
+                              'Prijs: ${entry.value * getPriceForItem(entry.key)}'),
+                        )),
                     ListTile(
-                      title: Text('Totaal Prijs: ${totalPrice.toStringAsFixed(2)}'),
+                      title: Text(
+                          'Totaal Prijs: ${totalPrice.toStringAsFixed(2)}'),
                     ),
                   ],
                 );

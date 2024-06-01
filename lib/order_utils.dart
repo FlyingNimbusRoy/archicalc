@@ -1,11 +1,12 @@
 import 'dart:io';
-import 'package:path_provider/path_provider.dart';
+
 import 'package:csv/csv.dart';
+import 'package:path_provider/path_provider.dart';
 
 Future<void> exportOrdersToCSV(
-    List<Map<String, dynamic>> orders,
-    double Function(String) getPriceForItem,
-    ) async {
+  List<Map<String, dynamic>> orders,
+  double Function(String) getPriceForItem,
+) async {
   List<List<dynamic>> rows = [];
   for (var order in orders) {
     String orderName = order['name'] ?? 'Bestelling';

@@ -1,3 +1,5 @@
+// ignore_for_file: library_private_types_in_public_api
+
 import 'package:flutter/material.dart';
 
 class CartModal extends StatefulWidget {
@@ -8,13 +10,13 @@ class CartModal extends StatefulWidget {
   final VoidCallback clearCart;
 
   const CartModal({
-    Key? key,
+    super.key,
     required this.selectedItems,
     required this.getPriceForItem,
     required this.updateCart,
     required this.resetCartAndComponents,
     required this.clearCart,
-  }) : super(key: key);
+  });
 
   @override
   _CartModalState createState() => _CartModalState();
@@ -39,11 +41,12 @@ class _CartModalState extends State<CartModal> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
+                    const Text(
                       'Cart',
                       style: TextStyle(
                         fontSize: 24.0,
@@ -52,7 +55,7 @@ class _CartModalState extends State<CartModal> {
                     ),
                     Text(
                       'Total Price: €$totalPrice',
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 18.0,
                       ),
                     ),
@@ -64,11 +67,12 @@ class _CartModalState extends State<CartModal> {
                 child: ListView.builder(
                   itemCount: widget.selectedItems.length,
                   itemBuilder: (BuildContext context, int index) {
-                    String itemName = widget.selectedItems.keys.elementAt(index);
-                    print(itemName);
+                    String itemName =
+                        widget.selectedItems.keys.elementAt(index);
 
                     int quantity = widget.selectedItems[itemName]!;
-                    double totalPrice = widget.getPriceForItem(itemName) * quantity;
+                    double totalPrice =
+                        widget.getPriceForItem(itemName) * quantity;
 
                     return ListTile(
                       title: Text('$itemName x $quantity'),
@@ -77,7 +81,8 @@ class _CartModalState extends State<CartModal> {
                         icon: const Icon(Icons.remove),
                         onPressed: () {
                           setState(() {
-                            widget.updateCart(itemName, false); // Decrease quantity
+                            widget.updateCart(
+                                itemName, false); // Decrease quantity
                           });
                         },
                       ),
@@ -86,8 +91,10 @@ class _CartModalState extends State<CartModal> {
                 ),
               ),
               Container(
-                color: Color.fromRGBO(245, 246, 250, 1.0), // Background color
-                padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0), // Adjust padding
+                color: const Color.fromRGBO(
+                    245, 246, 250, 1.0), // Background color
+                padding: const EdgeInsets.symmetric(
+                    vertical: 8.0, horizontal: 16.0), // Adjust padding
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -112,4 +119,3 @@ class _CartModalState extends State<CartModal> {
     );
   }
 }
-
