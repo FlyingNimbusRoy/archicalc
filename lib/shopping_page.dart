@@ -42,30 +42,35 @@ class _ShoppingPageState extends State<ShoppingPage> {
 
     if (fileName != null) {
       // Open file picker to select a location to save the file
-       String?result = await FilePicker.platform.getDirectoryPath();
+      String? result = await FilePicker.platform.getDirectoryPath();
 
       if (result != null) {
         // Get the file path
         String filePath = result;
 
         // Write CSV content
-        StringBuffer csvContent = StringBuffer();
-
-        // Write header
         List<List<dynamic>> rows = [];
 
         // Add CSV header
-        rows.add(['Order Name', 'Product', 'Quantity', 'Price']);
+        rows.add(['Order Name', 'Product', 'Quantity', 'Price', 'Total Price']);
 
         // Iterate through orders
-        orders.forEach((order) {
+        for (var order in orders) {
           String orderName = order['name'] ?? 'Unknown';
+          double totalPrice = 0.0;
+
+          // Calculate total price for the order
           order.forEach((product, quantity) {
             if (product != 'name') {
-              rows.add([orderName, product, quantity, 0.0]);
+              double price = getPriceForItem(product);
+              rows.add([orderName, product, quantity, price, '']);
+              totalPrice += price * quantity;
             }
           });
-        });
+
+          // Add a row for the total price of the order
+          rows.add([orderName, '', '', '', totalPrice]);
+        }
 
         String csv = const ListToCsvConverter().convert(rows);
 
@@ -77,7 +82,7 @@ class _ShoppingPageState extends State<ShoppingPage> {
           // Show a message using SnackBar
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Orders exported to $filePath'),
+              content: Text('Orders exported to $filePath/$fileName.csv'),
               duration: const Duration(seconds: 3), // Adjust the duration as needed
             ),
           );
@@ -101,6 +106,7 @@ class _ShoppingPageState extends State<ShoppingPage> {
       }
     }
   }
+
 
   Future<String?> _getFileNameFromUser(BuildContext context) {
     TextEditingController fileNameController = TextEditingController();
@@ -173,28 +179,28 @@ class _ShoppingPageState extends State<ShoppingPage> {
   void _showCart() {
     showModalBottomSheet(
       context: context,
+      isScrollControlled: true,
       builder: (BuildContext context) {
-        return Container(
-          padding: const EdgeInsets.all(16.0),
-          child: ListView(
-            shrinkWrap: true,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  IconButton(
-                    icon: Icon(Icons.close),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ],
-              ),
-              SizedBox(height: 16.0),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  StatefulBuilder(
+        return FractionallySizedBox(
+          heightFactor: 0.8, // Adjust the height factor as needed
+          child: Container(
+            padding: const EdgeInsets.all(0.0),
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    IconButton(
+                      icon: Icon(Icons.close),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ],
+                ),
+                SizedBox(height: 16.0),
+                Expanded(
+                  child: StatefulBuilder(
                     builder: (BuildContext context, StateSetter setState) {
                       return CartModal(
                         selectedItems: selectedItems,
@@ -205,15 +211,16 @@ class _ShoppingPageState extends State<ShoppingPage> {
                       );
                     },
                   ),
-                  SizedBox(height: 16.0),
-                ],
-              ),
-            ],
+                ),
+                SizedBox(height: 16.0),
+              ],
+            ),
           ),
         );
       },
     );
   }
+
 
   void _resetCartAndComponents() {
     setState(() {
@@ -273,6 +280,8 @@ class _ShoppingPageState extends State<ShoppingPage> {
   }
 
   void _showPlacedOrders() {
+    print(placedOrders);
+
     showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
@@ -495,7 +504,7 @@ class _ShoppingPageState extends State<ShoppingPage> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Total: ${calculateTotalPrice().toStringAsFixed(2)}',
+                'Prijs: €${calculateTotalPrice().toStringAsFixed(2)}',
                 style: const TextStyle(fontSize: 22.0,
                     fontWeight: FontWeight.bold,
                     color: Colors.white),
@@ -508,7 +517,7 @@ class _ShoppingPageState extends State<ShoppingPage> {
                 ),
                 child: Text(
                   'Bestellingen',
-                  style: TextStyle(color: Color(0xFFFFA000), fontSize: 18.0),
+                  style: TextStyle(color: Color(0xFFFFA000), fontSize: 16.0),
                 ),
               ),
               FloatingActionButton(
